@@ -1,0 +1,15 @@
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/Padre/Plugin/HG.pm
+lib/Padre/Plugin/HG/ProjectClone.pm
+lib/Padre/Plugin/HG/ProjectCommit.pm
+lib/Padre/Plugin/HG/StatusTree.pm
+lib/Padre/Plugin/HG/UserPassPrompt.pm
+lib/Padre/Plugin/HG/DiffView.pm
+lib/Padre/Plugin/HG/LogView.pm
+t/00-load.t
+t/HG.t
+t/pod.t
+META.yml                                 Module meta-data (added by MakeMaker)
