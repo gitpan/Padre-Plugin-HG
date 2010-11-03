@@ -12,4 +12,3 @@ lib/Padre/Plugin/HG/LogView.pm
 t/00-load.t
 t/HG.t
 t/pod.t
-META.yml                                 Module meta-data (added by MakeMaker)
