@@ -19,7 +19,7 @@ use Padre::Plugin::HG::UserPassPrompt;
 use Padre::Plugin::HG::DiffView;
 use Padre::Plugin::HG::LogView;
 my %projects;
-our $VERSION = '0.14';
+our $VERSION = '0.16';
 our @ISA     = 'Padre::Plugin';
 
 my $VCS = "Mercurial";
@@ -90,7 +90,7 @@ under the same terms as Perl itself.
 # Padre::Plugin Methods
 
 sub padre_interfaces {
-	'Padre::Plugin' => 0.24
+	'Padre::Plugin' => 0.72
 }
 
 sub plugin_name {
