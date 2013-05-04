@@ -1,5 +1,5 @@
 Changes
-ignore.txt
+igndore.txt
 lib/Padre/Plugin/HG.pm
 lib/Padre/Plugin/HG/DiffView.pm
 lib/Padre/Plugin/HG/LogView.pm

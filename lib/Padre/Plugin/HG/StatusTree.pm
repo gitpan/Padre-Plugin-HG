@@ -125,10 +125,14 @@ sub new
 
   $self->SetSizer($box);  
   Padre::Current->main->left->show($self);
+  $self->{treeCtrl} = $treectrl;
   $ThisTree = $self;
   return $self;
    
 }
+
+
+
 
 
 =pod
@@ -140,8 +144,8 @@ sub new
 =cut
 
 sub gettext_label {
-        
-         my @dirs = File::Spec->splitdir( $project_name );
+        my ($self) = @_;
+        my @dirs = File::Spec->splitdir( $project_name);
         my $name = File::Spec->catdir(('..',$dirs[-2], $dirs[-1]));
          chomp $name;
         return "(HG) ".$name;
@@ -432,7 +436,7 @@ sub _on_tree_item_menu {
                        sub { $HG->show_diff($selected_file, $parent_dir);}
                );  
                #diff to a revision  
-               my $diff = $menu->Append(
+               my $diff2 = $menu->Append(
                          -1,
                        Wx::gettext( 'Diff to Revision' ));
                     
@@ -465,6 +469,34 @@ sub _on_tree_item_menu {
 
 =pod
 
+=head2  view_close
+
+    Called by Padre when the X is clicked on the tree view in the left . 
+ 
+=cut
+sub view_close(){
+   #$HG->close_statusTree();
+   return 1;
+}
+
+sub view_stop(){
+
+}
+
+
+=pod
+
+=head2  view_panel
+
+    Called by Padre when the X is clicked on the tree view in the left . 
+ 
+=cut
+sub view_panel(){
+  return 'left';
+}
+
+=pod
+
 =head2  open_file
 
         open_file($path)
@@ -476,12 +508,8 @@ sub open_file
 { 
      	 my ($path) = @_;
      	        my $main = Padre->ide->wx->main;
-	        if ( my $id = $main->find_editor_of_file($path) ) {
-	                my $page = $main->notebook->GetPage($id);
-	                $page->SetFocus;
-	        } else {
-	                $main->setup_editors($path);
-	        }
+	        $main->setup_editors($path);
+	        
 }
 
 =pod

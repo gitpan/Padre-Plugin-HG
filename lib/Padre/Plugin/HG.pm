@@ -19,10 +19,10 @@ use Padre::Plugin::HG::UserPassPrompt;
 use Padre::Plugin::HG::DiffView;
 use Padre::Plugin::HG::LogView;
 my %projects;
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 our @ISA     = 'Padre::Plugin';
 
-my $VCS = "Mercurial";
+my $VCS = "Mercurial"
 # enter the vcs commands here, variables will be evaled in in the sub routines. 
 # was meant as a way to make it more generic.  Not sure it is going to 
 # succeed. 
@@ -90,7 +90,7 @@ under the same terms as Perl itself.
 # Padre::Plugin Methods
 
 sub padre_interfaces {
-	'Padre::Plugin' => 0.72
+	'Padre::Plugin' => 0.90
 }
 
 sub plugin_name {
@@ -111,6 +111,13 @@ sub plugin_disable
 {
   require Class::Unload;
   Class::Unload->unload('Padre::Plugin::HG::StatusTree;');
+}
+
+sub padre_hooks
+{
+    my %hooks;
+     $hooks{after_save} =  \&after_save;
+     return \%hooks;
 }
 
 #####################################################################
@@ -328,6 +335,8 @@ sub vcs_execute
 
 
 
+
+
 # show_statusTree
 #
 # Displays a Project Browser in the side pane. The Browser shows the status of the
@@ -348,6 +357,24 @@ sub show_statusTree
 		$projects{$project_root} = Padre::Plugin::HG::StatusTree->new($self,$project_root);	
 	}
 }
+
+
+
+# close_statusTree
+#
+# Closes the Project Browser and deletes the Status tree object
+
+sub close_statusTree
+{	
+	my ($self) = @_;
+	my $project_root = $self->_project_root(current_filename());
+	if (exists($projects{$project_root}) )
+	{
+		delete $projects{$project_root} ;
+		print "deleted $project_root\n";
+	}
+}
+
 
 #
 #
@@ -423,7 +450,7 @@ sub show_log
 	 $self->{project_path} = $self->_project_root(current_filename());
 
 	return $main->error("Not a $VCS Project") if ! $self->{project_path} ;
- 
+	
 	my $obj = Padre::Plugin::HG::LogView->showList($self,current_filename());	
 	$obj = undef;
 
@@ -459,6 +486,21 @@ sub show_project_clone
 }	
 
 
+# Event Listner for Save 
+# refresh the dir when done
+#
+
+sub after_save
+{
+	my ( $self ) = @_;
+	my $project_root = $self->_project_root(current_filename());
+	if ($projects{$project_root}){
+		$projects{$project_root}->refresh($projects{$project_root}->{treeCtrl});
+	}
+	print ("saved");
+}	
+
+
 
 
 #
@@ -473,6 +515,9 @@ sub show_project_clone
 sub _project_root
 {
 	my ($self, $filename) = @_;
+	if (!$filename){
+		return 0;
+	}
 	my $dir = File::Basename::dirname($filename);
 	my $project_root = $self->vcs_execute($VCSCommand{root}, $dir);
 	#file in not in a HG project.
@@ -510,17 +555,17 @@ sub _get_hg_files
 #
 # $self->current_filename();
 #  returns the path of the file with the current attention 
-#  in the ide.
-
-
+#  in the ide
 
 
 sub current_filename {
 
 	my $main = Padre->ide->wx->main;
 	my $doc = $main->current->document;
-	
-	my $filename = $doc->filename;
+	my $filename = '';
+	if ($doc){
+	 $filename = $doc->filename;
+	}
 	return $main->error("No document found") if not $filename;
         return ($filename); 
 }

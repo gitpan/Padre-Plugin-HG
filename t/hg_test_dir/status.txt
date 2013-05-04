@@ -1,5 +1,0 @@
-M test.pl
-? dir1/test.txt
-? dir2/text1.txt
-? dir2/dir3/text2.txt
-? test1.txt
